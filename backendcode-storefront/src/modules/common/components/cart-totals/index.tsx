@@ -13,9 +13,17 @@ type CartTotalsProps = {
     shipping_subtotal?: number | null
     discount_subtotal?: number | null
   }
+  shippingProtectionPrice?: number
+  shippingProtectionEnabled?: boolean
 }
 
-const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
+const SHIPPING_PROTECTION_PRICE = 15
+
+const CartTotals: React.FC<CartTotalsProps> = ({ 
+  totals, 
+  shippingProtectionPrice,
+  shippingProtectionEnabled = false 
+}) => {
   const {
     currency_code,
     total,
@@ -24,6 +32,10 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
     shipping_subtotal,
     discount_subtotal,
   } = totals
+
+  const shippingProtectionAmount = shippingProtectionEnabled ? SHIPPING_PROTECTION_PRICE : 0
+  
+  const displayTotal = (total ?? 0) + shippingProtectionAmount
 
   return (
     <div>
@@ -56,6 +68,14 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
             </span>
           </div>
         )}
+        {shippingProtectionEnabled && (
+          <div className="flex items-center justify-between">
+            <span>Shipping Protection</span>
+            <span data-testid="cart-shipping-protection" data-value={shippingProtectionAmount}>
+              {convertToLocale({ amount: shippingProtectionAmount, currency_code })}
+            </span>
+          </div>
+        )}
         <div className="flex justify-between">
           <span className="flex gap-x-1 items-center ">Taxes</span>
           <span data-testid="cart-taxes" data-value={tax_total || 0}>
@@ -69,9 +89,9 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
         <span
           className="txt-xlarge-plus"
           data-testid="cart-total"
-          data-value={total || 0}
+          data-value={displayTotal || 0}
         >
-          {convertToLocale({ amount: total ?? 0, currency_code })}
+          {convertToLocale({ amount: displayTotal, currency_code })}
         </span>
       </div>
       <div className="h-px w-full border-b border-gray-200 mt-4" />

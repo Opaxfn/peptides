@@ -1,13 +1,44 @@
 import { Heading } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import { HttpTypes } from "@medusajs/types"
 
-const Hero = () => {
+const getCategoryDescription = (name: string): string => {
+  const descriptions: Record<string, string> = {
+    "Add-ons": "Additional products and accessories",
+    Peptides: "Research-grade peptides",
+    SARMS: "Selective androgen modulators",
+    Orals: "Oral compounds",
+    Injectables: "Injectable compounds",
+  }
+  return descriptions[name] || "Browse our selection"
+}
+
+type HeroProps = {
+  categories: HttpTypes.StoreProductCategory[]
+}
+
+const Hero = ({ categories }: HeroProps) => {
+  const categoryLinks = categories.map((cat) => ({
+    name: cat.name,
+    handle: cat.handle,
+    desc: getCategoryDescription(cat.name),
+  }))
+
   return (
     <>
       {/* Main Hero */}
-      <div className="h-[80vh] w-full relative bg-deus-black overflow-hidden">
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-5">
+      <div className="h-[80vh] w-full relative overflow-hidden">
+        {/* Premium gradient background with warm tint */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#1a1a1a] via-[#252018] to-[#151515]" />
+        
+        {/* Accent glow - top right */}
+        <div className="absolute top-20 right-20 z-0 w-[300px] h-[300px] bg-deus-accent/35 rounded-full blur-[100px]" />
+        
+        {/* Accent glow - bottom left */}
+        <div className="absolute bottom-20 left-20 z-0 w-[300px] h-[300px] bg-deus-accent/35 rounded-full blur-[100px]" />
+
+        {/* Background pattern - subtle */}
+        <div className="absolute inset-0 z-0 opacity-[0.02]">
           <div
             className="absolute inset-0"
             style={{
@@ -66,8 +97,8 @@ const Hero = () => {
               <span className="text-xs tracking-wider uppercase text-deus-gray-500">Purity Guaranteed</span>
             </div>
             <div className="flex flex-col items-center text-center gap-2">
-              <span className="text-deus-accent text-2xl font-bold">24h</span>
-              <span className="text-xs tracking-wider uppercase text-deus-gray-500">Fast Shipping</span>
+              <span className="text-deus-accent text-2xl font-bold">Lab</span>
+              <span className="text-xs tracking-wider uppercase text-deus-gray-500">Tested Quality</span>
             </div>
             <div className="flex flex-col items-center text-center gap-2">
               <span className="text-deus-accent text-2xl font-bold">100%</span>
@@ -93,17 +124,10 @@ const Hero = () => {
             </h2>
           </div>
           <div className="grid grid-cols-2 small:grid-cols-3 gap-4 small:gap-6">
-            {[
-              { name: "Peptides", desc: "Research-grade peptides" },
-              { name: "SARMs", desc: "Selective androgen modulators" },
-              { name: "Post Cycle", desc: "PCT support compounds" },
-              { name: "Weight Loss", desc: "Fat loss compounds" },
-              { name: "Orals", desc: "Oral compounds" },
-              { name: "Injectables", desc: "Injectable compounds" },
-            ].map((cat) => (
+            {categoryLinks.map((cat) => (
               <LocalizedClientLink
                 key={cat.name}
-                href={`/categories/${cat.name.toLowerCase().replace(/\s+/g, "-")}`}
+                href={`/categories/${cat.handle}`}
                 className="group"
               >
                 <div className="bg-white border border-deus-gray-200 p-8 text-center hover:border-deus-accent hover:shadow-lg transition-all duration-300 ease-out">

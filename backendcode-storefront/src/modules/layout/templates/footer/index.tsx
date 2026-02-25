@@ -12,6 +12,14 @@ export default async function Footer() {
 
   return (
     <footer className="bg-deus-black text-white w-full">
+      {/* Research Disclaimer Banner */}
+      <div className="bg-amber-900/50 border-b border-amber-700/50">
+        <div className="content-container py-3 px-4">
+          <p className="text-center text-amber-200 text-xs sm:text-sm font-medium tracking-wide">
+            ⚠️ <span className="font-semibold">FOR RESEARCH PURPOSES ONLY</span> - Not for human use. These products are sold exclusively for laboratory research applications.
+          </p>
+        </div>
+      </div>
       <div className="content-container flex flex-col w-full">
         {/* Main footer content */}
         <div className="grid grid-cols-1 xsmall:grid-cols-2 small:grid-cols-4 gap-12 py-16">

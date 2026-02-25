@@ -105,7 +105,7 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
       )}
 
       {type === "full" && (
-        <Table.Cell className="hidden small:table-cell">
+        <Table.Cell>
           <LineItemUnitPrice
             item={item}
             style="tight"

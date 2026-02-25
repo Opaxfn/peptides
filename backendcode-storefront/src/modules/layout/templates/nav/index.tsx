@@ -8,6 +8,7 @@ import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
+import SearchBar from "@modules/layout/components/search-bar"
 
 export default async function Nav() {
   const [regions, locales, currentLocale, categories] = await Promise.all([
@@ -23,7 +24,7 @@ export default async function Nav() {
     <div className="sticky top-0 inset-x-0 z-50 group">
       {/* Top announcement bar */}
       <div className="bg-deus-black text-white text-center py-2 text-xs tracking-widest uppercase">
-        Free shipping on orders over $150 CAD &mdash; Discreet Packaging Guaranteed
+        ⚠️ <span className="text-amber-400 font-semibold">Research Use Only</span> — Not for Human Use | Free shipping on orders over $300 CAD &mdash; Discreet Packaging Guaranteed
       </div>
 
       <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
@@ -31,7 +32,7 @@ export default async function Nav() {
           {/* Left: Mobile menu */}
           <div className="flex-1 basis-0 h-full flex items-center">
             <div className="h-full">
-              <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} />
+              <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} categories={topLevelCategories} />
             </div>
           </div>
 
@@ -46,9 +47,9 @@ export default async function Nav() {
             </LocalizedClientLink>
           </div>
 
-          {/* Right: Account + Cart */}
-          <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
-            <div className="hidden small:flex items-center gap-x-6 h-full">
+          {/* Right: Account + Search + Cart */}
+          <div className="flex items-center gap-x-4 h-full flex-1 basis-0 justify-end">
+            <div className="hidden small:flex items-center gap-x-4 h-full">
               <LocalizedClientLink
                 className="hover:text-deus-accent transition-colors duration-200 text-xs tracking-wider uppercase"
                 href="/account"
@@ -56,6 +57,7 @@ export default async function Nav() {
               >
                 Account
               </LocalizedClientLink>
+              <SearchBar />
             </div>
             <Suspense
               fallback={

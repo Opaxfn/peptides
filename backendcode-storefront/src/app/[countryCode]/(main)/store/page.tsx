@@ -4,8 +4,17 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import StoreTemplate from "@modules/store/templates"
 
 export const metadata: Metadata = {
-  title: "Store",
-  description: "Explore all of our products.",
+  title: "Buy Premium Peptides, SARMS, Orals & Injectables Online Canada | DeusWarehouse",
+  description: "Shop lab-tested peptides, SARMS, orals and injectables online. Best prices on premium research compounds with discreet shipping across Canada.",
+  keywords: ["buy peptides online", "buy peptides canada", "buy sarms online", "buy sarms canada", "buy orals online", "buy injectables online", "research peptides", "premium compounds canada"],
+  alternates: {
+    canonical: "/store",
+  },
+  openGraph: {
+    title: "Buy Premium Peptides, SARMS & More Online Canada | DeusWarehouse",
+    description: "Shop lab-tested peptides, SARMS, orals and injectables. Discreet shipping across Canada.",
+    type: "website",
+  },
 }
 
 type Params = {

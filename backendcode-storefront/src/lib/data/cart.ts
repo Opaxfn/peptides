@@ -114,6 +114,73 @@ export async function updateCart(data: HttpTypes.StoreUpdateCart) {
     .catch(medusaError)
 }
 
+const SHIPPING_PROTECTION_HANDLE = "shipping-protection"
+
+export async function getShippingProtectionVariant(countryCode: string) {
+  const region = await getRegion(countryCode)
+  if (!region) return null
+
+  const headers = await getAuthHeaders()
+
+  const { products } = await sdk.store.product.list(
+    {
+      handle: SHIPPING_PROTECTION_HANDLE,
+    },
+    {
+      fields: "variants, variants.prices",
+    },
+    headers
+  )
+
+  if (!products?.length || !products[0].variants?.length) {
+    return null
+  }
+
+  const variant = products[0].variants[0]
+  const price = variant.prices?.find(
+    (p) => p.currency_code === region.currency_code
+  )
+
+  const priceAmount = (price?.amount || 1500) / 100
+
+  return {
+    variantId: variant.id,
+    price: priceAmount,
+    currencyCode: region.currency_code,
+  }
+}
+
+export async function toggleShippingProtection(enabled: boolean, countryCode: string) {
+  const cart = await getOrSetCart(countryCode)
+  if (!cart) throw new Error("No cart found")
+
+  const headers = await getAuthHeaders()
+
+  const shippingProtection = await getShippingProtectionVariant(countryCode)
+  if (!shippingProtection) throw new Error("Shipping protection not available")
+
+  const existingItem = cart.items?.find(
+    (item) => item.variant?.product?.handle === SHIPPING_PROTECTION_HANDLE
+  )
+
+  if (enabled && !existingItem) {
+    await sdk.store.cart.createLineItem(
+      cart.id,
+      {
+        variant_id: shippingProtection.variantId,
+        quantity: 1,
+      },
+      {},
+      headers
+    )
+  } else if (!enabled && existingItem) {
+    await sdk.store.cart.deleteLineItem(cart.id, existingItem.id, headers)
+  }
+
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
+}
+
 export async function addToCart({
   variantId,
   quantity,

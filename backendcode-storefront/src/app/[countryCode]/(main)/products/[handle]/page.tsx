@@ -4,6 +4,7 @@ import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
 import ProductTemplate from "@modules/products/templates"
 import { HttpTypes } from "@medusajs/types"
+import { getBaseURL } from "@lib/util/get-base-url"
 
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>
@@ -88,13 +89,18 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${product.title} | Medusa Store`,
-    description: `${product.title}`,
-    openGraph: {
-      title: `${product.title} | Medusa Store`,
-      description: `${product.title}`,
-      images: product.thumbnail ? [product.thumbnail] : [],
-    },
+      title: `${product.title} | Buy ${product.title} Online Canada`,
+      description: `Shop ${product.title} - Premium quality, lab-tested with discreet shipping across Canada. Best prices on ${product.title} in Canada.`,
+      keywords: [`buy ${product.title}`, `${product.title} canada`, `${product.title} for sale`, "buy peptides online", "buy peptides canada"],
+      alternates: {
+        canonical: `/products/${product.handle}`,
+      },
+      openGraph: {
+      title: `${product.title} | Buy ${product.title} Online Canada`,
+        description: `Shop ${product.title} - Premium quality, lab-tested with discreet shipping across Canada.`,
+        images: product.thumbnail ? [product.thumbnail] : [],
+        type: "website",
+      },
   }
 }
 

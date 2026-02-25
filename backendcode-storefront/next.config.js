@@ -46,6 +46,18 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn.shopify.com",
       },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "*.cloudfront.net",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
       ...(S3_HOSTNAME && S3_PATHNAME
         ? [
             {

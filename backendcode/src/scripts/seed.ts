@@ -890,6 +890,46 @@ export default async function seedDemoData({ container }: ExecArgs) {
             },
           ],
         },
+        {
+          title: "Shipping Protection",
+          handle: "shipping-protection",
+          description: "Protect your order against seizure, loss, and damage during shipping.",
+          status: ProductStatus.PUBLISHED,
+          shipping_profile_id: shippingProfile.id,
+          is_giftcard: false,
+          options: [
+            {
+              title: "Type",
+              values: ["Protection"],
+            },
+          ],
+          variants: [
+            {
+              title: "Protection",
+              sku: "SHIPPING-PROTECTION",
+              options: {
+                Type: "Protection",
+              },
+              prices: [
+                {
+                  amount: 15,
+                  currency_code: "usd",
+                },
+                {
+                  amount: 15,
+                  currency_code: "eur",
+                },
+              ],
+              inventory_management: null,
+              allow_backorder: true,
+            },
+          ],
+          sales_channels: [
+            {
+              id: defaultSalesChannel[0].id,
+            },
+          ],
+        },
       ],
     },
   });

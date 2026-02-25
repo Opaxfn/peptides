@@ -20,8 +20,22 @@ export default function CollectionTemplate({
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy || "created_at"
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://deuswarehouse.com"
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: collection.title || "Collection",
+    description: `Shop premium ${collection.title?.toLowerCase() || "products"} online in Canada.`,
+    url: `${baseUrl}/collections/${collection.handle}`,
+  }
+
   return (
-    <div className="flex flex-col small:flex-row small:items-start py-6 content-container">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <div className="flex flex-col small:flex-row small:items-start py-6 content-container">
       <RefinementList sortBy={sort} />
       <div className="w-full">
         <div className="mb-8 text-2xl-semi">
@@ -43,5 +57,6 @@ export default function CollectionTemplate({
         </Suspense>
       </div>
     </div>
+    </>
   )
 }

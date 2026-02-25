@@ -3,19 +3,29 @@ import Summary from "./summary"
 import EmptyCartMessage from "../components/empty-cart-message"
 import SignInPrompt from "../components/sign-in-prompt"
 import Divider from "@modules/common/components/divider"
-import UpsellSection from "./upsell-section"
-import { HttpTypes } from "@medusajs/types"
+import QuickAddSection from "../components/quick-add"
+import { HttpTypes, StoreCartShippingOption } from "@medusajs/types"
+
+type ShippingProtectionData = {
+  variantId: string
+  price: number
+  currencyCode: string
+} | null
 
 const CartTemplate = ({
   cart,
   customer,
-  upsellProducts = [],
   countryCode,
+  shippingOptions = [],
+  shippingProtection = null,
+  shippingProtectionEnabled = false,
 }: {
   cart: HttpTypes.StoreCart | null
   customer: HttpTypes.StoreCustomer | null
-  upsellProducts?: any[]
   countryCode?: string
+  shippingOptions?: StoreCartShippingOption[]
+  shippingProtection?: ShippingProtectionData
+  shippingProtectionEnabled?: boolean
 }) => {
   return (
     <div className="py-12">
@@ -29,24 +39,25 @@ const CartTemplate = ({
                   <Divider />
                 </>
               )}
-              <ItemsTemplate cart={cart} />
-              {upsellProducts.length > 0 && countryCode && (
+              {countryCode && (
                 <>
+                  <QuickAddSection countryCode={countryCode} />
                   <Divider />
-                  <UpsellSection
-                    products={upsellProducts}
-                    countryCode={countryCode}
-                    currencyCode={cart?.currency_code ?? "usd"}
-                  />
                 </>
               )}
+              <ItemsTemplate cart={cart} />
             </div>
             <div className="relative">
               <div className="flex flex-col gap-y-8 sticky top-12">
                 {cart && cart.region && (
                   <>
                     <div className="bg-white py-6">
-                      <Summary cart={cart as any} />
+                      <Summary 
+                        cart={cart as any} 
+                        shippingOptions={shippingOptions} 
+                        shippingProtection={shippingProtection}
+                        shippingProtectionEnabled={shippingProtectionEnabled}
+                      />
                     </div>
                   </>
                 )}

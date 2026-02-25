@@ -58,9 +58,21 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     notFound()
   }
 
+  const collectionTitle = collection.title || ""
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://deuswarehouse.com"
+
   const metadata = {
-    title: `${collection.title} | Medusa Store`,
-    description: `${collection.title} collection`,
+    title: `Buy ${collectionTitle} Online Canada | DeusWarehouse`,
+    description: `Shop premium ${collectionTitle.toLowerCase()} online in Canada. Lab-tested with discreet shipping across Canada. Best prices on ${collectionTitle.toLowerCase()}.`,
+    keywords: [`buy ${collectionTitle.toLowerCase()} online`, `${collectionTitle} canada`, `${collectionTitle} for sale`],
+    alternates: {
+      canonical: `/collections/${params.handle}`,
+    },
+    openGraph: {
+      title: `Buy ${collectionTitle} Online Canada | DeusWarehouse`,
+      description: `Shop premium ${collectionTitle.toLowerCase()} online in Canada. Discreet shipping across Canada.`,
+      type: "website",
+    },
   } as Metadata
 
   return metadata

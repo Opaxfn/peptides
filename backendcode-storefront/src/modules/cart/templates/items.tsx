@@ -1,9 +1,11 @@
 import repeat from "@lib/util/repeat"
 import { HttpTypes } from "@medusajs/types"
-import { Heading, Table } from "@medusajs/ui"
+import { Heading, Table, clx } from "@medusajs/ui"
 
 import Item from "@modules/cart/components/item"
 import SkeletonLineItem from "@modules/skeletons/components/skeleton-line-item"
+import Divider from "@modules/common/components/divider"
+import LineItemPrice from "@modules/common/components/line-item-price"
 
 type ItemsTemplateProps = {
   cart?: HttpTypes.StoreCart
@@ -11,6 +13,15 @@ type ItemsTemplateProps = {
 
 const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {
   const items = cart?.items
+  
+  const regularItems = items?.filter(
+    (item) => item.variant?.product?.handle !== "shipping-protection"
+  )
+  
+  const shippingProtectionItem = items?.find(
+    (item) => item.variant?.product?.handle === "shipping-protection"
+  )
+
   return (
     <div>
       <div className="pb-3 flex items-center">
@@ -22,7 +33,7 @@ const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {
             <Table.HeaderCell className="!pl-0">Item</Table.HeaderCell>
             <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell>Quantity</Table.HeaderCell>
-            <Table.HeaderCell className="hidden small:table-cell">
+            <Table.HeaderCell>
               Price
             </Table.HeaderCell>
             <Table.HeaderCell className="!pr-0 text-right">
@@ -31,8 +42,8 @@ const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {items
-            ? items
+          {regularItems?.length
+            ? regularItems
                 .sort((a, b) => {
                   return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
                 })
@@ -50,6 +61,27 @@ const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {
               })}
         </Table.Body>
       </Table>
+
+      {shippingProtectionItem && (
+        <div className="mt-6">
+          <Divider />
+          <div className="py-4 flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-neutral-900">
+                {shippingProtectionItem.product_title}
+              </span>
+              <span className="text-xs text-neutral-500">
+                Protects against seizure, loss, and damage
+              </span>
+            </div>
+            <LineItemPrice
+              item={shippingProtectionItem}
+              currencyCode={cart?.currency_code}
+              region={cart?.region}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { retrieveCart } from "@lib/data/cart"
-import { getCategoryByHandle } from "@lib/data/categories"
+import { getCollectionByHandle } from "@lib/data/collections"
 import { listProducts } from "@lib/data/products"
 import { listRegions } from "@lib/data/regions"
 import CartDropdown from "../cart-dropdown"
@@ -21,22 +21,18 @@ export default async function CartButton() {
     // keep default
   }
 
-  // Fetch upsell products by category handle
+  // Fetch upsell products
   let upsellProducts: any[] = []
   try {
-    const upsellCategory = await getCategoryByHandle(["upsell"])
-    if (upsellCategory?.id) {
-      const { response } = await listProducts({
-        countryCode,
-        queryParams: {
-          category_id: [upsellCategory.id],
-          limit: 6,
-          fields:
-            "id,title,handle,thumbnail,*variants,*variants.calculated_price",
-        },
-      })
-      upsellProducts = response.products
-    }
+    const { response } = await listProducts({
+      countryCode,
+      queryParams: {
+        limit: 6,
+        fields:
+          "id,title,handle,thumbnail,*variants,*variants.calculated_price",
+      },
+    })
+    upsellProducts = response.products
   } catch {
     // no upsell products
   }

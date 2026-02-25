@@ -5,11 +5,13 @@ import { FormEvent, useEffect, useState } from "react"
 
 type RefinementListProps = {
   searchQuery?: string
+  showSearch?: boolean
   'data-testid'?: string
 }
 
 const RefinementList = ({
   searchQuery,
+  showSearch = true,
   'data-testid': dataTestId,
 }: RefinementListProps) => {
   const router = useRouter()
@@ -37,9 +39,13 @@ const RefinementList = ({
     router.push(`${pathname}?${params.toString()}`)
   }
 
+  if (!showSearch) {
+    return null
+  }
+
   return (
-    <div className="flex py-4 mb-4 w-full">
-      <form onSubmit={handleSearch} className="flex gap-2 w-full small:max-w-md">
+    <div className="flex py-4 mb-4 w-full small:w-auto small:flex-shrink-0">
+      <form onSubmit={handleSearch} className="flex gap-2 w-full small:w-64 small:flex-shrink-0">
         <input
           type="text"
           value={query}

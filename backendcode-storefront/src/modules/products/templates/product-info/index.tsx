@@ -1,12 +1,14 @@
 import { HttpTypes } from "@medusajs/types"
 import { Heading, Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import ProductReviews from "@modules/reviews/components/product-reviews"
 
 type ProductInfoProps = {
   product: HttpTypes.StoreProduct
+  countryCode: string
 }
 
-const ProductInfo = ({ product }: ProductInfoProps) => {
+const ProductInfo = ({ product, countryCode }: ProductInfoProps) => {
   return (
     <div id="product-info">
       <div className="flex flex-col gap-y-4 lg:max-w-[500px] mx-auto">
@@ -32,6 +34,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         >
           {product.description}
         </Text>
+
+        <ProductReviews productId={product.id} countryCode={countryCode} />
       </div>
     </div>
   )

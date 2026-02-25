@@ -134,3 +134,40 @@ export const listProductsWithSort = async ({
     queryParams,
   }
 }
+
+export const searchProducts = async ({
+  query,
+  limit = 6,
+  countryCode,
+}: {
+  query: string
+  limit?: number
+  countryCode: string
+}): Promise<HttpTypes.StoreProduct[]> => {
+  const region = await getRegion(countryCode)
+
+  if (!region) {
+    return []
+  }
+
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  return sdk.client
+    .fetch<{ products: HttpTypes.StoreProduct[] }>(
+      `/store/products`,
+      {
+        method: "GET",
+        query: {
+          limit,
+          region_id: region.id,
+          q: query,
+          fields:
+            "*variants.calculated_price,+variants.inventory_quantity,*variants.images,",
+        },
+        headers,
+      }
+    )
+    .then(({ products }) => products)
+}
