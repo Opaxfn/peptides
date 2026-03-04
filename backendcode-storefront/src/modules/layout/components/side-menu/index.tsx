@@ -1,19 +1,19 @@
 "use client"
 
 import { Popover, PopoverPanel, Transition } from "@headlessui/react"
-import { ArrowRightMini, XMark } from "@medusajs/icons"
+import { ArrowRightMini, ChevronDownMini, XMark } from "@medusajs/icons"
 import { Text, clx, useToggleState } from "@medusajs/ui"
 import { Fragment } from "react"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CountrySelect from "../country-select"
 import LanguageSelect from "../language-select"
+import SearchBar from "@modules/layout/components/search-bar"
 import { HttpTypes } from "@medusajs/types"
 import { Locale } from "@lib/data/locales"
 
 const SideMenuItems = {
   Home: "/",
-  Store: "/store",
   "About Us": "/about",
   FAQ: "/faq",
   Account: "/account",
@@ -24,11 +24,13 @@ type SideMenuProps = {
   regions: HttpTypes.StoreRegion[] | null
   locales: Locale[] | null
   currentLocale: string | null
+  categories?: HttpTypes.StoreProductCategory[] | null
 }
 
-const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
+const SideMenu = ({ regions, locales, currentLocale, categories }: SideMenuProps) => {
   const countryToggleState = useToggleState()
   const languageToggleState = useToggleState()
+  const productsToggleState = useToggleState()
 
   return (
     <div className="h-full">
@@ -78,19 +80,66 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                         <XMark />
                       </button>
                     </div>
-                    <ul className="flex flex-col gap-6 items-start justify-start">
-                      {Object.entries(SideMenuItems).map(([name, href]) => {
+                    <div className="mt-4">
+                      <div className="text-white [&_button]:text-white [&_button]:hover:text-deus-accent [&_svg]:text-white [&_input]:bg-white [&_input]:text-deus-black [&_input]::placeholder:text-gray-400 [&_.search-icon]:text-white">
+                        <SearchBar />
+                      </div>
+                    </div>
+                    <ul className="flex flex-col gap-6 items-start justify-start overflow-y-auto max-h-[60vh]">
+                      {Object.entries(SideMenuItems).map(([name, href], index) => {
                         return (
-                          <li key={name}>
-                            <LocalizedClientLink
-                              href={href}
-                              className="text-3xl leading-10 hover:text-ui-fg-disabled"
-                              onClick={close}
-                              data-testid={`${name.toLowerCase()}-link`}
-                            >
-                              {name}
-                            </LocalizedClientLink>
-                          </li>
+                          <Fragment key={name}>
+                            <li>
+                              <LocalizedClientLink
+                                href={href}
+                                className="text-3xl leading-10 hover:text-ui-fg-disabled"
+                                onClick={close}
+                                data-testid={`${name.toLowerCase()}-link`}
+                              >
+                                {name}
+                              </LocalizedClientLink>
+                            </li>
+                            {name === "Home" && (
+                              <li className="w-full">
+                                <button
+                                  onClick={() => productsToggleState.toggle()}
+                                  className="flex items-center justify-between w-full text-3xl leading-10 hover:text-ui-fg-disabled"
+                                >
+                                  Products
+                                  <ChevronDownMini
+                                    className={clx(
+                                      "transition-transform duration-150",
+                                      productsToggleState.state ? "rotate-180" : ""
+                                    )}
+                                  />
+                                </button>
+                                {productsToggleState.state && categories && (
+                                  <ul className="flex flex-col gap-2 mt-3 ml-2 border-l border-ui-border-base pl-4">
+                                    <li>
+                                      <LocalizedClientLink
+                                        href="/store"
+                                        className="text-lg text-deus-gray-300 hover:text-deus-accent"
+                                        onClick={close}
+                                      >
+                                        All Products
+                                      </LocalizedClientLink>
+                                    </li>
+                                    {categories.map((category) => (
+                                      <li key={category.id}>
+                                        <LocalizedClientLink
+                                          href={`/categories/${category.handle}`}
+                                          className="text-lg text-deus-gray-300 hover:text-deus-accent"
+                                          onClick={close}
+                                        >
+                                          {category.name}
+                                        </LocalizedClientLink>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </li>
+                            )}
+                          </Fragment>
                         )
                       })}
                     </ul>

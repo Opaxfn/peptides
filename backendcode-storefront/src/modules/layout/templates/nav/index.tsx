@@ -47,9 +47,10 @@ export default async function Nav() {
             </LocalizedClientLink>
           </div>
 
-          {/* Right: Account + Search + Cart */}
+          {/* Right: Search + Account + Cart */}
           <div className="flex items-center gap-x-4 h-full flex-1 basis-0 justify-end">
             <div className="hidden small:flex items-center gap-x-4 h-full">
+              <SearchBar />
               <LocalizedClientLink
                 className="hover:text-deus-accent transition-colors duration-200 text-xs tracking-wider uppercase"
                 href="/account"
@@ -57,7 +58,6 @@ export default async function Nav() {
               >
                 Account
               </LocalizedClientLink>
-              <SearchBar />
             </div>
             <Suspense
               fallback={
